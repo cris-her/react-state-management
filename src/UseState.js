@@ -1,22 +1,51 @@
 import React from 'react';
 
+const SECURITY_CODE = 'paradigma';
+
 function UseState(props) {
-    const [error, setError] = React.useState(true);
+    // Estados independientes
+    const [error, setError] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
+    const [value, setValue] = React.useState('');
+
+    /*
+    // Estados compuestos
+    const [state, setState] = React.useState({
+        value: '',
+        error: false,
+        loading: false,
+
+        deleted: false,
+        confimed: false
+    })
+    */
+    
+    console.log(value);
 
     React.useEffect(() => {
-        console.log("Empezando el efecto")
-
-        if (loading) {
+        console.log('Empezando el efecto');
+        console.log(loading);
+        
+        if(!!loading){
             setTimeout(() => {
-                console.log("Haciendo la validación")
-                setLoading(false);
-                console.log("Terminando la validación")
-            }, 3000);
+                console.log('Haciendo validación');
+                
+                if (value === SECURITY_CODE) {
+                    //onConfirm();
+                    setLoading(false);
+                    //setError(false);
+                } else {
+                    //onError();
+                    setError(true);
+                    setLoading(false);
+                }
+
+                console.log('Terminando validación');
+            }, 2000);
         }
 
-        console.log("Terminando el efecto")
-    }, [loading]);
+        console.log('Terminando el efecto');
+    }, [loading])
 
 
     return (
@@ -25,17 +54,29 @@ function UseState(props) {
 
             <p>Por favor, escribe el código de seguridad.</p>
             
-            {error && (
-                <p>Error: el código de seguridad es incorrecto</p>
+            {(error && !loading)  && (
+                <p>Error: el código es incorrecto</p>
             )}
 
             {loading && (
                 <p>Cargando...</p>
             )}
 
-            <input placeholder="Código de seguridad" />
+            <input 
+                placeholder="Código de Seguridad"
+                value= {value}
+                onChange = {(event) =>{
+                    // setError(false);
+                    setValue(event.target.value);
+                    //onWrite(event.target.value);
+                }}
+            />
+
             <button
-                onClick={() => setLoading(true)}
+                onClick={() => {
+                    setError(false);
+                    setLoading(true)
+                }}
             >Comprobar</button>
         </div>
     );
