@@ -16,11 +16,65 @@ function UseState(props) {
         error: false,
         loading: false,
 
-        // deleted: false,
-        // confimed: false
+        deleted: false,
+        confimed: false
     })
     
     console.log(state);
+
+    const onConfirm = () =>{
+        setState({
+            ...state,
+            error: false,
+            loading: false,
+            
+            //paso el etadod e confirma
+            confimed: true
+        })
+    }
+
+    const onError = () => {
+        setState({
+            ...state,
+            error: true,
+            loading: false
+        })
+    }
+
+    const onWrite = (newValue) =>{
+        setState({
+            ...state,
+            value: newValue
+        })
+    }
+
+    const onCheck = () => {
+        setState({
+            ...state,
+            loading: true
+        })
+    }
+
+    const onDelete = () => {
+        setState({
+            ...state,
+
+            //paso a delete screen
+            deleted: true
+
+        })
+    }
+
+    const onReset = () => {
+        setState({
+            ...state,
+
+            //vuelvo a overviwe screen
+            confimed: false,
+            deleted: false,
+            value:''
+        })
+    }
 
     React.useEffect(() => {
         console.log('Empezando el efecto');
@@ -31,21 +85,17 @@ function UseState(props) {
                 console.log('Haciendo validación');
                 
                 if (state.value === SECURITY_CODE) {
-                    //onConfirm();
-                    setState({
-                        ...state,
-                        error: false,
-                        loading: false
-                    });
+                    onConfirm();
+                    // setState({
+                    //     ...state,
+                    //     error: false,
+                    //     loading: false,
+                    //     confimed: true,
+                    // });
                     // setLoading(false);
                     // //setError(false);
                 } else {
-                    //onError();
-                    setState({
-                        ...state,
-                        error: true, 
-                        loading: false
-                    });
+                    onError();
                     // setError(true);
                     // setLoading(false);
                 }
@@ -57,47 +107,78 @@ function UseState(props) {
         console.log('Terminando el efecto');
     }, [state.loading])
 
+    if(!state.deleted && !state.confimed) {
+        return (
+            <div>
+                <h2>Eliminar {props.name}</h2>
 
-    return (
-        <div>
-            <h2>Eliminar {props.name}</h2>
+                <p>Por favor, escribe el código de seguridad.</p>
+                
+                {(state.error && !state.loading)  && (
+                    <p>Error: el código es incorrecto</p>
+                )}
 
-            <p>Por favor, escribe el código de seguridad.</p>
-            
-            {(state.error && !state.loading)  && (
-                <p>Error: el código es incorrecto</p>
-            )}
+                {state.loading && (
+                    <p>Cargando...</p>
+                )}
 
-            {state.loading && (
-                <p>Cargando...</p>
-            )}
+                <input 
+                    placeholder="Código de Seguridad"
+                    value= {state.value}
+                    onChange = {(event) =>{
+                        // // setError(false);
+                        // setValue(event.target.value);
 
-            <input 
-                placeholder="Código de Seguridad"
-                value= {state.value}
-                onChange = {(event) =>{
-                    // // setError(false);
-                    // setValue(event.target.value);
-                    setState({
-                        ...state,
-                        value: event.target.value,
-                    })
-                    //onWrite(event.target.value);
-                }}
-            />
+                        onWrite(event.target.value);
+                    }}
+                />
 
-            <button
-                onClick={() => {
-                    setState({
-                        ...state,
-                        loading: true,
-                    })
-                    // setError(false);
-                    // setLoading(true)
-                }}
-            >Comprobar</button>
-        </div>
-    );
+                <button
+                    onClick={() => {
+                        onCheck();
+                        // setError(false);
+                        // setLoading(true)
+                    }}
+                >Comprobar</button>
+            </div>
+        );
+    } else if (!!state.confimed && !state.deleted) {
+        return (
+            <React.Fragment>
+                <h2> Eliminar {props.name}</h2>
+
+                <p> Predimos confirmación, estás segur@? </p>
+
+                <button
+                    onClick={() =>{
+                        //voy a delete screen
+                        onDelete()
+                    }}
+                > Sí, eliminar </button>
+
+                <button
+                    onClick={() =>{
+                        //vuelvo a overview
+                        onReset();
+                    }}
+                > No, me arrepentí </button>
+            </React.Fragment>
+        )
+    } else {
+        return (
+            <React.Fragment>
+                <h2> Eliminar {props.name}</h2>
+
+                <button
+                    onClick={() =>{
+                        //vulevo a overview
+                        onReset();
+                    }}
+                > Resetear, volver atrás </button>
+                
+            </React.Fragment>
+        )
+    }
 }
 
 export { UseState };
