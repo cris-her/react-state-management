@@ -73,10 +73,7 @@ function UseReducer(props) {
                 > Comprobar </button>
             </div>
         );
-    }
-
-    //cocnfirmed screen
-    else if(!state.deleted && state.confimed){
+    } else if(!state.deleted && state.confimed){
         return (
             <React.Fragment>
                 <h2> Eliminar {props.name}</h2>
