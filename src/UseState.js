@@ -10,7 +10,7 @@ function UseState(props) {
     const [value, setValue] = React.useState('');
     */
     
-    // Estados compuestos
+    // Estado compuesto
     const [state, setState] = React.useState({
         value: '',
         error: false,
@@ -27,8 +27,6 @@ function UseState(props) {
             ...state,
             error: false,
             loading: false,
-            
-            //paso el etadod e confirma
             confimed: true
         })
     }
@@ -58,18 +56,13 @@ function UseState(props) {
     const onDelete = () => {
         setState({
             ...state,
-
-            //paso a delete screen
             deleted: true
-
         })
     }
 
     const onReset = () => {
         setState({
             ...state,
-
-            //vuelvo a overviwe screen
             confimed: false,
             deleted: false,
             value:''
@@ -128,7 +121,6 @@ function UseState(props) {
                     onChange = {(event) =>{
                         // // setError(false);
                         // setValue(event.target.value);
-
                         onWrite(event.target.value);
                     }}
                 />
@@ -145,36 +137,33 @@ function UseState(props) {
     } else if (!!state.confimed && !state.deleted) {
         return (
             <React.Fragment>
-                <h2> Eliminar {props.name}</h2>
+                <h2>Eliminar {props.name}</h2>
 
-                <p> Predimos confirmación, estás segur@? </p>
+                <p>Predimos confirmación, estás segur@?</p>
 
                 <button
                     onClick={() =>{
-                        //voy a delete screen
                         onDelete()
                     }}
-                > Sí, eliminar </button>
+                >Sí, eliminar </button>
 
                 <button
                     onClick={() =>{
-                        //vuelvo a overview
                         onReset();
                     }}
-                > No, me arrepentí </button>
+                >No, me arrepentí</button>
             </React.Fragment>
         )
     } else {
         return (
             <React.Fragment>
-                <h2> Eliminar {props.name}</h2>
+                <h2>Eliminar {props.name}</h2>
 
                 <button
                     onClick={() =>{
-                        //vulevo a overview
                         onReset();
                     }}
-                > Resetear, volver atrás </button>
+                >Resetear, volver atrás</button>
                 
             </React.Fragment>
         )
